@@ -1,0 +1,57 @@
+# =============================================================
+# CAMADA DE REDIRECIONAMENTO — Cloudflare Pages
+# Arquivo: _redirects  (na RAIZ do projeto, sem extensão)
+#
+# COMO FUNCIONA
+#   Coluna 1 = caminho no SEU domínio (o que vai dentro do ebook)
+#   Coluna 2 = link de afiliado real (Shopee / Magalu / Mercado Livre)
+#   Coluna 3 = 302 (temporário). NUNCA use 301 aqui: o 301 fica
+#              em cache no navegador e a troca do link não pega.
+#
+# REGRA DE OURO
+#   O ebook nunca aponta para a Shopee. Aponta sempre para
+#   seudominio.com.br/r/slug. Quando o link de afiliado expirar,
+#   você edita UMA linha aqui e todos os PDFs já baixados voltam
+#   a funcionar.
+#
+# ENQUANTO NÃO TIVER O LINK
+#   Deixe a linha apontando para /kit (já está assim abaixo).
+#   O leitor cai no catálogo em vez de tomar erro 404.
+# =============================================================
+
+
+# ---------- PARA COZINHAR ----------
+/r/vapor            /kit    302
+/r/ralador          /kit    302
+/r/frigideira       /kit    302
+/r/tapete-silicone  /kit    302
+
+# ---------- PARA CONGELAR E PORCIONAR ----------
+/r/forminha         /kit    302
+/r/potes-vidro      /kit    302
+/r/etiquetas        /kit    302
+/r/saco-freezer     /kit    302
+
+# ---------- PARA A HORA DA REFEIÇÃO ----------
+/r/cadeira          /kit    302
+/r/prato            /kit    302
+/r/colher           /kit    302
+/r/babador          /kit    302
+
+
+# ---------- ATALHOS ÚTEIS ----------
+# Link curto para o catálogo (use nas redes sociais)
+/kit-bebe           /kit    302
+
+# Link permanente do PDF (esse pode ser 301, é seu e não muda)
+/ebook              /papinhas-faceis.pdf    302
+
+
+# =============================================================
+# EXEMPLO DE COMO FICA DEPOIS DE PREENCHIDO
+# (apague este bloco quando estiver tudo no ar)
+#
+# /r/forminha    https://s.shopee.com.br/AbC123XyZ         302
+# /r/cadeira     https://www.magazinevoce.com.br/sua-loja  302
+# /r/potes-vidro https://mercadolivre.com/sec/1AbCdEf      302
+# =============================================================
