@@ -522,11 +522,24 @@ footer b{color:var(--ink2)}
   function valid(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v); }
   document.querySelectorAll('[data-form]').forEach(function(btn){
     btn.addEventListener('click',function(){
-      var box=btn.closest('.form');
-      var mail=box.querySelector('input[type=email]');
+      var box  = btn.closest('.form');
+      var mail = box.querySelector('input[type=email]');
+      var nome = box.querySelector('input[type=text]');
+
       if(!valid(mail.value)){ mail.focus(); mail.style.borderColor='#B23F66'; return; }
-      /* >>> AQUI entra a integração: MailerLite / Brevo / Beehiiv / Google Forms <<< */
-      box.classList.add('done');
+
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
+
+      var fd = new FormData();
+      fd.append('email', mail.value.trim());
+      fd.append('name',  nome ? nome.value.trim() : '');
+
+      fetch('https://fcbf-contato.systeme.io/f21bed05',{
+        method:'POST', body:fd, mode:'no-cors'
+      })
+      .then(function(){ box.classList.add('done'); })
+      .catch(function(){ box.classList.add('done'); });
     });
   });
 })();
