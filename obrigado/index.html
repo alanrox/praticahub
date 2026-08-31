@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quase lá — Papinhas Fáceis</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Lora:ital,wght@1,500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Poppins',system-ui,sans-serif;
+  background:#F2F6F0;color:#22332A;
+  min-height:100vh;display:grid;place-items:center;padding:24px;
+  -webkit-font-smoothing:antialiased
+}
+.card{
+  background:#fff;border-radius:20px;padding:clamp(36px,6vw,56px) clamp(28px,5vw,48px);
+  max-width:480px;width:100%;text-align:center;
+  box-shadow:0 12px 40px rgba(34,51,42,.08);border:1px solid #D3E0CE
+}
+.step{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#E7EFE4;border-radius:60px;padding:8px 16px 8px 10px;
+  font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#5C9E55;margin-bottom:24px
+}
+.step i{width:8px;height:8px;border-radius:50%;background:#5C9E55;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1{font-size:clamp(1.5rem,4vw,2rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:14px}
+.lead{font-size:1rem;color:#46594E;line-height:1.65;margin-bottom:28px}
+.btn-dl{
+  display:block;background:#EE8442;color:#fff;text-decoration:none;
+  font-weight:700;font-size:1rem;padding:18px 32px;border-radius:60px;
+  box-shadow:0 8px 24px rgba(238,132,66,.3);transition:transform .18s,box-shadow .18s;
+  margin-bottom:12px
+}
+.btn-dl:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(238,132,66,.38)}
+.hint{font-size:.78rem;color:#7C8F83;line-height:1.5;margin-bottom:28px}
+.divider{border:none;border-top:1px solid #D3E0CE;margin:24px 0}
+.steps{text-align:left;list-style:none}
+.steps li{display:flex;align-items:flex-start;gap:12px;font-size:.88rem;color:#46594E;margin-bottom:14px}
+.steps li:last-child{margin-bottom:0}
+.steps .n{
+  flex:0 0 24px;width:24px;height:24px;border-radius:50%;
+  background:#22332A;color:#fff;font-size:.7rem;font-weight:700;
+  display:grid;place-items:center;margin-top:1px
+}
+.spam-tip{
+  background:#FEF3E7;border-radius:12px;border:1px solid #F5C99A;
+  padding:14px 16px;font-size:.8rem;color:#6B4A1E;line-height:1.5;margin-top:20px;text-align:left
+}
+.spam-tip strong{color:#4A3010}
+footer-note{display:block;margin-top:28px;font-size:.72rem;color:#B4C4B0;text-align:center}
+a.home{color:#5C9E55;text-decoration:none;font-size:.78rem}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="step"><i></i>Processando</div>
+  <h1>Falta um passo — confirme seu e-mail.</h1>
+  <p class="lead">Acabamos de enviar uma mensagem de confirmação. Clique no link que está lá e o ebook segue imediatamente.</p>
+
+  <a href="/ebook" class="btn-dl">📥 Baixar agora (acesso direto)</a>
+  <p class="hint">Se preferir, o PDF já está disponível acima — sem precisar esperar o e-mail.</p>
+
+  <hr class="divider">
+
+  <ul class="steps">
+    <li><span class="n">1</span><span>Abra sua caixa de e-mail e procure uma mensagem de <strong>Pratica Hub</strong>.</span></li>
+    <li><span class="n">2</span><span>Clique em <strong>"Confirmar e receber o ebook"</strong>.</span></li>
+    <li><span class="n">3</span><span>Pronto — o PDF com as 22 páginas chega em seguida.</span></li>
+  </ul>
+
+  <div class="spam-tip">
+    <strong>Não encontrou?</strong> Olhe na pasta de <strong>Promoções</strong> ou <strong>Spam</strong>. Se estiver lá, marque como "não é spam" para garantir que os próximos e-mails cheguem certos.
+  </div>
+
+  <footer-note><a href="/" class="home">← Pratica Hub</a></footer-note>
+</div>
+</body>
+</html>
