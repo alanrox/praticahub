@@ -521,6 +521,7 @@ footer b{color:var(--ink2)}
 
   function valid(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v); }
   document.querySelectorAll('[data-form]').forEach(function(btn){
+    var textoOriginal = btn.textContent;
     btn.addEventListener('click',function(){
       var box  = btn.closest('.form');
       var mail = box.querySelector('input[type=email]');
@@ -535,11 +536,29 @@ footer b{color:var(--ink2)}
       fd.append('email', mail.value.trim());
       fd.append('name',  nome ? nome.value.trim() : '');
 
-      fetch('https://fcbf-contato.systeme.io/f21bed05',{
-        method:'POST', body:fd, mode:'no-cors'
-      })
-      .then(function(){ box.classList.add('done'); })
-      .catch(function(){ box.classList.add('done'); });
+      fetch('/subscribe', { method:'POST', body: fd })
+        .then(function(r){ return r.json().then(function(data){ return { ok: r.ok && data.ok, data: data }; }); })
+        .then(function(res){
+          if (res.ok) {
+            box.classList.add('done');
+          } else {
+            btn.textContent = textoOriginal;
+            btn.disabled = false;
+            mail.style.borderColor = '#B23F66';
+            var err = box.querySelector('.form-error');
+            if (!err) {
+              err = document.createElement('small');
+              err.className = 'form-error';
+              err.style.cssText = 'display:block;color:#B23F66;margin-top:8px;text-align:center;font-weight:600';
+              box.appendChild(err);
+            }
+            err.textContent = 'Não deu certo. Confira o e-mail e tente de novo.';
+          }
+        })
+        .catch(function(){
+          btn.textContent = textoOriginal;
+          btn.disabled = false;
+        });
     });
   });
 })();
