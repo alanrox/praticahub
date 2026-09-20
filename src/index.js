@@ -1,20 +1,23 @@
-// functions/subscribe.js
+// src/index.js
 //
-// Cloudflare Pages Function — roda no MESMO domínio da landing,
-// então não existe problema de CORS/CSRF como aconteceu com o
-// Brevo e o Systeme.io. O navegador chama POST /subscribe e essa
-// função responde.
+// Worker principal do projeto (Workers + Static Assets). Esse projeto
+// deploya com `wrangler deploy`, não com o pipeline de Cloudflare Pages
+// — então a pasta /functions (roteamento de Pages Functions) nunca é
+// lida. A rota POST /subscribe precisa ser tratada aqui, no Worker.
 //
-// CORREÇÃO (v2): o Resend descontinuou o modelo de "Audiences"
-// com ID. Contatos agora são globais na conta — POST /contacts
-// direto, sem precisar de nenhum ID de audiência. Agrupamento é
-// feito por Segment (o segmento "Papinhas" já foi criado).
+// Tudo que não for POST/OPTIONS /subscribe cai para os assets estáticos
+// (binding ASSETS): index.html, /papinhas/, /kit/, /obrigado/, o PDF,
+// e as regras do _redirects (que continuam funcionando normalmente,
+// nativas em Workers Static Assets).
 //
-// Variável de ambiente esperada (configurada no painel do
-// Cloudflare Pages, nunca no código):
+// CORREÇÃO (v2): o Resend descontinuou o modelo de "Audiences" com ID.
+// Contatos agora são globais na conta — POST /contacts direto, sem
+// precisar de nenhum ID de audiência. Agrupamento é feito por Segment
+// (o segmento "Papinhas" já foi criado).
+//
+// Variável de ambiente esperada (Settings > Variables and Secrets do
+// Worker "praticahub" no painel Cloudflare):
 //   RESEND_API_KEY  -> obrigatória
-//
-// Rota final: https://praticahub.com.br/subscribe
 
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8" };
 const SEGMENT_ID = "bea245d4-6845-44b1-883e-b05d54c6b551"; // segmento "Papinhas"
@@ -71,7 +74,7 @@ function emailHtml(name) {
 </body></html>`;
 }
 
-export async function onRequestPost({ request, env }) {
+async function handleSubscribe(request, env) {
   try {
     const contentType = request.headers.get("content-type") || "";
     let email = "";
@@ -167,7 +170,7 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-export async function onRequestOptions() {
+function handleSubscribeOptions() {
   return new Response(null, {
     headers: {
       "Access-Control-Allow-Origin": "*",
@@ -176,3 +179,16 @@ export async function onRequestOptions() {
     },
   });
 }
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/subscribe") {
+      if (request.method === "POST") return handleSubscribe(request, env);
+      if (request.method === "OPTIONS") return handleSubscribeOptions();
+    }
+
+    return env.ASSETS.fetch(request);
+  },
+};
