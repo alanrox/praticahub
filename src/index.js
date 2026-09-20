@@ -109,7 +109,7 @@ async function handleSubscribe(request, env) {
     //    falhar (ex.: contato já existe) — o e-mail sai de qualquer forma.
     try {
       const [firstName, ...rest] = name.split(" ").filter(Boolean);
-      await fetch("https://api.resend.com/contacts", {
+      const createResp = await fetch("https://api.resend.com/contacts", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${env.RESEND_API_KEY}`,
@@ -122,17 +122,24 @@ async function handleSubscribe(request, env) {
           unsubscribed: false,
         }),
       });
+      if (!createResp.ok) {
+        console.error("resend create contact", createResp.status, await createResp.text());
+      }
 
-      await fetch("https://api.resend.com/contacts/add-to-segment", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, segment_id: SEGMENT_ID }),
-      }).catch(() => {});
-    } catch (_) {
+      // Endpoint do Resend: POST /contacts/{id ou e-mail}/segments/{segment_id}
+      const segResp = await fetch(
+        `https://api.resend.com/contacts/${encodeURIComponent(email)}/segments/${SEGMENT_ID}`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${env.RESEND_API_KEY}` },
+        }
+      );
+      if (!segResp.ok) {
+        console.error("resend add to segment", segResp.status, await segResp.text());
+      }
+    } catch (err) {
       // segue o fluxo mesmo se o cadastro do contato falhar
+      console.error("resend contact flow", String(err));
     }
 
     // 2) Envia o e-mail de entrega do ebook
