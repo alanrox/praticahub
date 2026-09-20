@@ -1,0 +1,168 @@
+// functions/subscribe.js
+//
+// Cloudflare Pages Function — roda no MESMO domínio da landing,
+// então não existe problema de CORS/CSRF como aconteceu com o
+// Brevo e o Systeme.io. O navegador chama POST /subscribe e essa
+// função responde.
+//
+// Variáveis de ambiente esperadas (configuradas no painel do
+// Cloudflare Pages, nunca no código):
+//   RESEND_API_KEY      -> obrigatória
+//   RESEND_AUDIENCE_ID   -> opcional (lista/audiência no Resend)
+//
+// Rota final: https://praticahub.com.br/subscribe
+
+const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8" };
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v || "");
+}
+
+function emailHtml(name) {
+  const hello = name ? `Olá, ${name}!` : "Olá!";
+  return `<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F2F6F0;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#F2F6F0">
+<tr><td align="center" style="padding:32px 16px;">
+  <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;border:1px solid #D3E0CE;">
+
+    <tr><td align="center" style="background:#22332A;border-radius:16px 16px 0 0;padding:22px 32px;">
+      <p style="margin:0;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#93A498;">Guia prático de introdução alimentar</p>
+      <p style="margin:8px 0 0;font-family:Georgia,serif;font-size:26px;font-weight:700;color:#F2F6F0;">Papinhas <em style="color:#EE8442;font-style:italic;">Fáceis</em></p>
+    </td></tr>
+
+    <tr><td style="padding:32px 36px 16px;">
+      <p style="margin:0 0 16px;font-size:16px;color:#22332A;">${hello}</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#46594E;line-height:1.7;">
+        Seu ebook chegou. São <strong style="color:#22332A;">22 páginas</strong> — uma receita por página,
+        feitas para caber inteiras na tela do celular enquanto você cozinha com a outra mão.
+      </p>
+    </td></tr>
+
+    <tr><td align="center" style="padding:8px 36px 32px;">
+      <a href="https://praticahub.com.br/ebook" target="_blank"
+         style="display:inline-block;background:#EE8442;color:#ffffff;text-decoration:none;
+                font-weight:700;font-size:16px;padding:16px 36px;border-radius:60px;">
+        📥 Baixar Papinhas Fáceis (PDF)
+      </a>
+      <p style="margin:14px 0 0;font-size:12px;color:#93A498;">
+        Se o botão não abrir: <a href="https://praticahub.com.br/ebook" style="color:#EE8442;">praticahub.com.br/ebook</a>
+      </p>
+    </td></tr>
+
+    <tr><td style="background:#F2F6F0;border-radius:0 0 16px 16px;padding:18px 36px;border-top:1px solid #D3E0CE;">
+      <p style="margin:0;font-size:12px;color:#93A498;line-height:1.6;">
+        Você recebeu este e-mail porque se cadastrou em
+        <a href="https://praticahub.com.br/papinhas/" style="color:#5C9E55;">praticahub.com.br/papinhas</a>.
+        Não quer mais receber? Responda este e-mail pedindo para sair da lista.
+      </p>
+    </td></tr>
+
+  </table>
+</td></tr>
+</table>
+</body></html>`;
+}
+
+export async function onRequestPost({ request, env }) {
+  try {
+    const contentType = request.headers.get("content-type") || "";
+    let email = "";
+    let name = "";
+
+    if (contentType.includes("application/json")) {
+      const body = await request.json();
+      email = (body.email || "").toString().trim();
+      name = (body.name || "").toString().trim();
+    } else {
+      const form = await request.formData();
+      email = (form.get("email") || "").toString().trim();
+      name = (form.get("name") || "").toString().trim();
+    }
+
+    if (!isValidEmail(email)) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "email_invalido" }),
+        { status: 400, headers: JSON_HEADERS }
+      );
+    }
+
+    if (!env.RESEND_API_KEY) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "config_ausente" }),
+        { status: 500, headers: JSON_HEADERS }
+      );
+    }
+
+    // 1) Adiciona o contato à audiência (lista), se configurada.
+    //    Não bloqueia o fluxo se falhar (ex.: contato já existe).
+    if (env.RESEND_AUDIENCE_ID) {
+      try {
+        await fetch(
+          `https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${env.RESEND_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              first_name: name || undefined,
+              unsubscribed: false,
+            }),
+          }
+        );
+      } catch (_) {
+        // segue o fluxo mesmo se o cadastro na audiência falhar
+      }
+    }
+
+    // 2) Envia o e-mail de entrega do ebook
+    const sendResp = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Pratica Hub <contato@praticahub.com.br>",
+        to: [email],
+        subject: "Seu ebook Papinhas Fáceis chegou 🥕",
+        html: emailHtml(name),
+      }),
+    });
+
+    if (!sendResp.ok) {
+      const detail = await sendResp.text();
+      return new Response(
+        JSON.stringify({ ok: false, error: "envio_falhou", detail }),
+        { status: 502, headers: JSON_HEADERS }
+      );
+    }
+
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: JSON_HEADERS,
+    });
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ ok: false, error: "erro_servidor", detail: String(err) }),
+      { status: 500, headers: JSON_HEADERS }
+    );
+  }
+}
+
+// Responde a preflight caso algum navegador envie OPTIONS
+// (não é necessário para same-origin, mas é inofensivo manter).
+export async function onRequestOptions() {
+  return new Response(null, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
