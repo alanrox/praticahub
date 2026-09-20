@@ -5,14 +5,19 @@
 // Brevo e o Systeme.io. O navegador chama POST /subscribe e essa
 // função responde.
 //
-// Variáveis de ambiente esperadas (configuradas no painel do
+// CORREÇÃO (v2): o Resend descontinuou o modelo de "Audiences"
+// com ID. Contatos agora são globais na conta — POST /contacts
+// direto, sem precisar de nenhum ID de audiência. Agrupamento é
+// feito por Segment (o segmento "Papinhas" já foi criado).
+//
+// Variável de ambiente esperada (configurada no painel do
 // Cloudflare Pages, nunca no código):
-//   RESEND_API_KEY      -> obrigatória
-//   RESEND_AUDIENCE_ID   -> opcional (lista/audiência no Resend)
+//   RESEND_API_KEY  -> obrigatória
 //
 // Rota final: https://praticahub.com.br/subscribe
 
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8" };
+const SEGMENT_ID = "bea245d4-6845-44b1-883e-b05d54c6b551"; // segmento "Papinhas"
 
 function isValidEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v || "");
@@ -96,28 +101,35 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    // 1) Adiciona o contato à audiência (lista), se configurada.
-    //    Não bloqueia o fluxo se falhar (ex.: contato já existe).
-    if (env.RESEND_AUDIENCE_ID) {
-      try {
-        await fetch(
-          `https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${env.RESEND_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email,
-              first_name: name || undefined,
-              unsubscribed: false,
-            }),
-          }
-        );
-      } catch (_) {
-        // segue o fluxo mesmo se o cadastro na audiência falhar
-      }
+    // 1) Cria o contato (endpoint global, sem audience_id) e já
+    //    coloca no segmento "Papinhas". Não bloqueia o fluxo se
+    //    falhar (ex.: contato já existe) — o e-mail sai de qualquer forma.
+    try {
+      const [firstName, ...rest] = name.split(" ").filter(Boolean);
+      await fetch("https://api.resend.com/contacts", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          first_name: firstName || undefined,
+          last_name: rest.length ? rest.join(" ") : undefined,
+          unsubscribed: false,
+        }),
+      });
+
+      await fetch("https://api.resend.com/contacts/add-to-segment", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, segment_id: SEGMENT_ID }),
+      }).catch(() => {});
+    } catch (_) {
+      // segue o fluxo mesmo se o cadastro do contato falhar
     }
 
     // 2) Envia o e-mail de entrega do ebook
@@ -155,8 +167,6 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-// Responde a preflight caso algum navegador envie OPTIONS
-// (não é necessário para same-origin, mas é inofensivo manter).
 export async function onRequestOptions() {
   return new Response(null, {
     headers: {
