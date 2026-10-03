@@ -15,12 +15,19 @@
 // precisar de nenhum ID de audiência. Agrupamento é feito por Segment
 // (o segmento "Papinhas" já foi criado).
 //
+// POST /subscribe-casa: mesma lógica do /subscribe, só que para a amostra
+// grátis do ebook "O Que Comprar Primeiro" (/oquecomprar/). Implementado
+// como função própria (handleSubscribeCasa/emailHtmlCasa), sem alterar
+// nada do fluxo de /subscribe — o Papinhas já está validado em produção
+// e não deve ser tocado.
+//
 // Variável de ambiente esperada (Settings > Variables and Secrets do
 // Worker "praticahub" no painel Cloudflare):
 //   RESEND_API_KEY  -> obrigatória
 
 const JSON_HEADERS = { "Content-Type": "application/json; charset=utf-8" };
 const SEGMENT_ID = "bea245d4-6845-44b1-883e-b05d54c6b551"; // segmento "Papinhas"
+const SEGMENT_ID_CASA = "99ed86bd-aa9c-4779-a23c-44cb0ecfc193"; // segmento "ebook-casa"
 
 function isValidEmail(v) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v || "");
@@ -177,6 +184,160 @@ async function handleSubscribe(request, env) {
   }
 }
 
+// ---------------------------------------------------------------------
+// Amostra grátis — "O Que Comprar Primeiro" (/oquecomprar/)
+// Paleta do produto: terra #B05C3C / creme #FAF6F0 / escuro #2B2926
+// ---------------------------------------------------------------------
+
+function emailHtmlCasa(name) {
+  const hello = name ? `Olá, ${name}!` : "Olá!";
+  return `<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#FAF6F0;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FAF6F0">
+<tr><td align="center" style="padding:32px 16px;">
+  <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;border:1px solid #EDE6DA;">
+
+    <tr><td align="center" style="background:#2B2926;border-radius:16px 16px 0 0;padding:22px 32px;">
+      <p style="margin:0;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#B8AFA6;">Guia da primeira casa</p>
+      <p style="margin:8px 0 0;font-family:Georgia,serif;font-size:26px;font-weight:700;color:#FAF6F0;">O Que Comprar <em style="color:#C97A56;font-style:italic;">Primeiro</em></p>
+    </td></tr>
+
+    <tr><td style="padding:32px 36px 16px;">
+      <p style="margin:0 0 16px;font-size:16px;color:#2B2926;">${hello}</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#5B554D;line-height:1.7;">
+        Sua amostra grátis chegou. Ela traz a abertura completa, o <strong style="color:#2B2926;">Método CASA</strong>
+        e os quatro primeiros capítulos — o suficiente para atravessar a primeira semana na casa nova sem errar as compras que custam caro.
+      </p>
+    </td></tr>
+
+    <tr><td align="center" style="padding:8px 36px 32px;">
+      <a href="https://praticahub.com.br/oquecomprar/amostra" target="_blank"
+         style="display:inline-block;background:#B05C3C;color:#ffffff;text-decoration:none;
+                font-weight:700;font-size:16px;padding:16px 36px;border-radius:60px;">
+        📥 Baixar amostra (PDF)
+      </a>
+      <p style="margin:14px 0 0;font-size:12px;color:#9A8F83;">
+        Se o botão não abrir: <a href="https://praticahub.com.br/oquecomprar/amostra" style="color:#B05C3C;">praticahub.com.br/oquecomprar/amostra</a>
+      </p>
+    </td></tr>
+
+    <tr><td style="background:#FAF6F0;border-radius:0 0 16px 16px;padding:18px 36px;border-top:1px solid #EDE6DA;">
+      <p style="margin:0;font-size:12px;color:#9A8F83;line-height:1.6;">
+        Você recebeu este e-mail porque pediu a amostra grátis em
+        <a href="https://praticahub.com.br/oquecomprar/" style="color:#B05C3C;">praticahub.com.br/oquecomprar</a>.
+        Não quer mais receber? Responda este e-mail pedindo para sair da lista.
+      </p>
+    </td></tr>
+
+  </table>
+</td></tr>
+</table>
+</body></html>`;
+}
+
+async function handleSubscribeCasa(request, env) {
+  try {
+    const contentType = request.headers.get("content-type") || "";
+    let email = "";
+    let name = "";
+
+    if (contentType.includes("application/json")) {
+      const body = await request.json();
+      email = (body.email || "").toString().trim();
+      name = (body.name || "").toString().trim();
+    } else {
+      const form = await request.formData();
+      email = (form.get("email") || "").toString().trim();
+      name = (form.get("name") || "").toString().trim();
+    }
+
+    if (!isValidEmail(email)) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "email_invalido" }),
+        { status: 400, headers: JSON_HEADERS }
+      );
+    }
+
+    if (!env.RESEND_API_KEY) {
+      return new Response(
+        JSON.stringify({ ok: false, error: "config_ausente" }),
+        { status: 500, headers: JSON_HEADERS }
+      );
+    }
+
+    // 1) Cria o contato e coloca no segmento "ebook-casa". Não bloqueia
+    //    o fluxo se falhar (ex.: contato já existe) — o e-mail sai de
+    //    qualquer forma.
+    try {
+      const [firstName, ...rest] = name.split(" ").filter(Boolean);
+      const createResp = await fetch("https://api.resend.com/contacts", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          first_name: firstName || undefined,
+          last_name: rest.length ? rest.join(" ") : undefined,
+          unsubscribed: false,
+        }),
+      });
+      if (!createResp.ok) {
+        console.error("resend create contact (casa)", createResp.status, await createResp.text());
+      }
+
+      const segResp = await fetch(
+        `https://api.resend.com/contacts/${encodeURIComponent(email)}/segments/${SEGMENT_ID_CASA}`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${env.RESEND_API_KEY}` },
+        }
+      );
+      if (!segResp.ok) {
+        console.error("resend add to segment (casa)", segResp.status, await segResp.text());
+      }
+    } catch (err) {
+      console.error("resend contact flow (casa)", String(err));
+    }
+
+    // 2) Envia o e-mail com o link da amostra
+    const sendResp = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Pratica Hub <contato@praticahub.com.br>",
+        to: [email],
+        subject: "Sua amostra grátis de O Que Comprar Primeiro chegou 🏠",
+        html: emailHtmlCasa(name),
+      }),
+    });
+
+    if (!sendResp.ok) {
+      const detail = await sendResp.text();
+      return new Response(
+        JSON.stringify({ ok: false, error: "envio_falhou", detail }),
+        { status: 502, headers: JSON_HEADERS }
+      );
+    }
+
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: JSON_HEADERS,
+    });
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ ok: false, error: "erro_servidor", detail: String(err) }),
+      { status: 500, headers: JSON_HEADERS }
+    );
+  }
+}
+
 function handleSubscribeOptions() {
   return new Response(null, {
     headers: {
@@ -193,6 +354,11 @@ export default {
 
     if (url.pathname === "/subscribe") {
       if (request.method === "POST") return handleSubscribe(request, env);
+      if (request.method === "OPTIONS") return handleSubscribeOptions();
+    }
+
+    if (url.pathname === "/subscribe-casa") {
+      if (request.method === "POST") return handleSubscribeCasa(request, env);
       if (request.method === "OPTIONS") return handleSubscribeOptions();
     }
 

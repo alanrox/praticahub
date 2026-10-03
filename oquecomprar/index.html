@@ -166,6 +166,29 @@ footer a{color:#C9BFB4}
   --creme:#1E1C1A;--areia:#272421;--branco:#262422;
   --escuro:#EDE6DA;--cinza:#A89F95;--terra:#C97A56;--terra-d:#B05C3C;
 }
+
+/* ---------- modal amostra grátis ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(20,19,17,.6);
+  display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal-overlay.open{display:flex}
+.modal{background:var(--branco);border-radius:6px;max-width:420px;width:100%;
+  padding:32px 28px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal h3{font-family:var(--serif);font-size:1.4rem;margin:0 0 8px;color:var(--escuro)}
+.modal .modal-lead{color:var(--cinza);font-size:.92rem;margin:0 0 20px;line-height:1.5}
+.modal .modal-close{position:absolute;top:12px;right:14px;background:none;border:none;
+  font-size:1.5rem;line-height:1;color:var(--cinza);cursor:pointer;padding:4px}
+.modal .form-row{display:grid;gap:10px;margin-bottom:12px}
+.modal input{width:100%;font-family:inherit;font-size:.95rem;padding:14px 16px;
+  border:1.5px solid var(--areia);border-radius:4px;background:var(--creme);color:var(--escuro)}
+.modal input:focus{outline:none;border-color:var(--terra)}
+.modal button.cta{width:100%;border:none;cursor:pointer;font-family:inherit;font-size:1rem}
+.modal .modal-micro{font-size:.74rem;color:var(--cinza);margin:12px 0 0;text-align:center;line-height:1.4}
+.modal .modal-error{display:none;color:#C44A3E;font-size:.82rem;margin-top:8px;text-align:center;font-weight:600}
+.modal .ok{display:none;text-align:center}
+.modal .ok b{display:block;color:var(--escuro);margin-bottom:6px;font-size:1.05rem}
+.modal .ok p{color:var(--cinza);font-size:.88rem;margin:0}
+.modal-body.done .form-row,.modal-body.done button.cta,.modal-body.done .modal-micro,.modal-body.done .modal-lead{display:none}
+.modal-body.done .ok{display:block}
 </style>
 </head>
 <body>
@@ -323,6 +346,85 @@ footer a{color:#C9BFB4}
 </footer>
 
 <div class="sticky"><a href="/oquecomprar/comprar">Quero o guia completo</a></div>
+
+<!-- ============ MODAL AMOSTRA GRÁTIS ============ -->
+<div class="modal-overlay" id="amostraOverlay">
+  <div class="modal">
+    <button type="button" class="modal-close" id="amostraClose" aria-label="Fechar">&times;</button>
+    <div class="modal-body" id="amostraForm">
+      <h3>Receba sua amostra grátis</h3>
+      <p class="modal-lead">Abertura completa, o Método CASA e os quatro primeiros capítulos — direto no seu e-mail.</p>
+      <div class="form-row">
+        <input type="text" id="casaNome" placeholder="Seu primeiro nome" autocomplete="given-name">
+        <input type="email" id="casaEmail" placeholder="Seu melhor e-mail" autocomplete="email">
+      </div>
+      <button type="button" class="cta" id="casaSubmit">Baixar amostra grátis</button>
+      <p class="modal-error" id="casaError">Não deu certo. Confira o e-mail e tente de novo.</p>
+      <p class="modal-micro">Sem spam. Só a amostra e, de vez em quando, novidades do guia.</p>
+      <div class="ok"><b>Pronto! Confira sua caixa de entrada.</b><p>O PDF chega em até 5 minutos. Se não aparecer, olha o spam ou promoções.</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var overlay = document.getElementById('amostraOverlay');
+  var formBody = document.getElementById('amostraForm');
+  var nome = document.getElementById('casaNome');
+  var email = document.getElementById('casaEmail');
+  var btn = document.getElementById('casaSubmit');
+  var err = document.getElementById('casaError');
+  var textoOriginal = btn.textContent;
+
+  function valid(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(v); }
+
+  function openModal(){
+    overlay.classList.add('open');
+    formBody.classList.remove('done');
+    err.style.display = 'none';
+    setTimeout(function(){ nome.focus(); }, 50);
+  }
+  function closeModal(){ overlay.classList.remove('open'); }
+
+  document.querySelectorAll('a[href="/oquecomprar/amostra"]').forEach(function(a){
+    a.addEventListener('click', function(ev){ ev.preventDefault(); openModal(); });
+  });
+  document.getElementById('amostraClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(ev){ if (ev.target === overlay) closeModal(); });
+  addEventListener('keydown', function(ev){ if (ev.key === 'Escape') closeModal(); });
+
+  btn.addEventListener('click', function(){
+    if (!valid(email.value)) { email.focus(); email.style.borderColor = '#C44A3E'; return; }
+    email.style.borderColor = '';
+    err.style.display = 'none';
+
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+
+    var fd = new FormData();
+    fd.append('email', email.value.trim());
+    fd.append('name', nome.value.trim());
+
+    fetch('/subscribe-casa', { method: 'POST', body: fd })
+      .then(function(r){ return r.json().then(function(data){ return { ok: r.ok && data.ok, data: data }; }); })
+      .then(function(res){
+        if (res.ok) {
+          formBody.classList.add('done');
+        } else {
+          btn.textContent = textoOriginal;
+          btn.disabled = false;
+          email.style.borderColor = '#C44A3E';
+          err.style.display = 'block';
+        }
+      })
+      .catch(function(){
+        btn.textContent = textoOriginal;
+        btn.disabled = false;
+        err.style.display = 'block';
+      });
+  });
+})();
+</script>
 
 </body>
 </html>
