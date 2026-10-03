@@ -22,9 +22,7 @@
 /ebook              /papinhas-faceis.pdf                    302
 
 # ---------- oquecomprar (O Que Comprar Primeiro) ----------
-# TEMPORARIO: os dois apontam para a propria pagina ate chegarem
-# a URL do checkout Kiwify e o PDF da amostra. Depois e so trocar o destino:
-#   /oquecomprar/comprar  -> https://pay.kiwify.com.br/XXXX
-#   /oquecomprar/amostra  -> /oquecomprar/amostra-o-que-comprar-primeiro.pdf
-/oquecomprar/comprar   /oquecomprar/                          302
-/oquecomprar/amostra   /oquecomprar/                          302
+# TEMPORARIO: /comprar volta para a propria pagina ate chegar a URL do
+# checkout Kiwify (trocar o destino por https://pay.kiwify.com.br/XXXX).
+/oquecomprar/comprar   /oquecomprar/                                    302
+/oquecomprar/amostra   /oquecomprar/amostra-o-que-comprar-primeiro.pdf  302
