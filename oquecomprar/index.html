@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>O Que Comprar Primeiro — Guia da Primeira Casa</title>
+<meta name="description" content="O que comprar agora, o que pode esperar e os erros que custam caro. Um sistema de decisão para montar a primeira casa sem gastar tudo de uma vez.">
+<link rel="canonical" href="https://praticahub.com.br/oquecomprar/">
+<meta property="og:title" content="O Que Comprar Primeiro — Guia da Primeira Casa">
+<meta property="og:description" content="Você não precisa comprar tudo para ter uma casa. Precisa saber o que comprar primeiro.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://praticahub.com.br/oquecomprar/">
+<!-- Imagem 03_kwify_thumbnail_1200x800.png salva como /oquecomprar/og.png -->
+<meta property="og:image" content="https://praticahub.com.br/oquecomprar/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --creme:#FAF6F0; --areia:#EDE6DA; --terra:#B05C3C; --terra-d:#8A4530;
+  --escuro:#2B2926; --cinza:#787269; --branco:#fff;
+  --verde:#5E7454; --amarelo:#D6A43E; --vermelho:#C44A3E;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--creme);color:var(--escuro);
+  font-family:var(--sans);font-size:17px;line-height:1.65;
+}
+img{max-width:100%;height:auto;display:block}
+.wrap{width:100%;max-width:1040px;margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.15;margin:0}
+
+/* ---------- barra ---------- */
+.topbar{background:var(--terra);color:var(--creme);text-align:center;
+  padding:10px 16px;font-size:13px;letter-spacing:.16em;font-weight:600}
+
+/* ---------- hero ---------- */
+.hero{padding:62px 0 54px}
+.hero .grid{display:flex;gap:52px;align-items:center;flex-wrap:wrap}
+.hero .txt{flex:1 1 380px;min-width:290px}
+.hero .art{flex:0 1 310px;min-width:220px;margin:0 auto}
+.kicker{font-size:13px;letter-spacing:.18em;font-weight:700;color:var(--terra);
+  text-transform:uppercase;margin-bottom:18px}
+h1{font-size:clamp(2.3rem,6.2vw,3.7rem)}
+h1 .hl{color:var(--terra);display:block}
+.sub{font-family:var(--serif);font-size:clamp(1.05rem,2.6vw,1.35rem);
+  color:var(--cinza);margin:22px 0 30px;line-height:1.45}
+.capa{border:1px solid var(--areia);box-shadow:0 22px 48px rgba(43,41,38,.14);border-radius:3px}
+.capa-ph{aspect-ratio:1600/2263;background:var(--areia);display:flex;
+  align-items:center;justify-content:center;color:var(--cinza);
+  font-size:13px;text-align:center;padding:20px;border-radius:3px}
+
+/* ---------- botões ---------- */
+.cta{display:inline-block;background:var(--terra);color:var(--creme);
+  text-decoration:none;font-weight:700;font-size:1.05rem;letter-spacing:.02em;
+  padding:19px 38px;border-radius:4px;transition:background .18s,transform .18s;
+  text-align:center}
+.cta:hover{background:var(--terra-d);transform:translateY(-2px)}
+.cta.ghost{background:transparent;color:var(--terra);
+  border:2px solid var(--terra);padding:17px 36px}
+.cta.ghost:hover{background:var(--terra);color:var(--creme)}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.micro{font-size:.84rem;color:var(--cinza);margin-top:14px}
+
+/* ---------- blocos ---------- */
+section{padding:58px 0}
+.alt{background:var(--areia)}
+.dark{background:#262422;color:var(--creme)}
+.dark h2{color:var(--creme)}
+h2{font-size:clamp(1.65rem,4.2vw,2.3rem);margin-bottom:12px}
+.lead{color:var(--cinza);max-width:620px;margin-bottom:34px;font-size:1.03rem}
+.dark .lead{color:#C9BFB4}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:22px}
+.card{background:var(--branco);border-left:4px solid var(--terra);
+  padding:26px 24px;border-radius:3px}
+.alt .card{background:var(--creme)}
+.card h3{font-size:1.14rem;margin-bottom:9px}
+.card p{margin:0;color:var(--cinza);font-size:.95rem}
+
+/* dores */
+.pains{list-style:none;padding:0;margin:0;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:13px}
+.pains li{background:var(--branco);padding:17px 20px;border-radius:3px;
+  font-size:.97rem;border-left:3px solid var(--areia)}
+.alt .pains li{background:var(--creme)}
+
+/* método */
+.metodo{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:18px}
+.q{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);
+  padding:26px 22px;border-radius:4px}
+.q .letra{font-family:var(--serif);font-size:3rem;color:var(--terra);
+  line-height:1;margin-bottom:10px;font-weight:700}
+.q h3{font-size:1.05rem;margin-bottom:9px}
+.q p{margin:0;font-size:.9rem;color:#C9BFB4}
+
+/* prioridades */
+.prio{display:flex;flex-direction:column;gap:13px;max-width:620px}
+.prio div{display:flex;gap:14px;align-items:flex-start;font-size:.98rem}
+.dot{width:17px;height:17px;border-radius:50%;flex:0 0 17px;margin-top:5px}
+
+/* sumário */
+.toc{columns:2;column-gap:40px;list-style:none;padding:0;margin:0}
+.toc li{break-inside:avoid;padding:9px 0;border-bottom:1px solid var(--areia);
+  font-size:.95rem}
+.toc b{font-family:var(--serif)}
+@media(max-width:620px){.toc{columns:1}}
+
+/* amostra */
+.amostra{background:var(--branco);border:2px dashed var(--terra);
+  padding:36px 30px;border-radius:5px;text-align:center}
+.alt .amostra{background:var(--creme)}
+
+/* faq */
+.faq details{background:var(--branco);border-radius:3px;padding:18px 22px;
+  margin-bottom:11px;border-left:3px solid var(--areia)}
+.alt .faq details{background:var(--creme)}
+.faq summary{cursor:pointer;font-weight:600;font-size:1rem;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:'+';color:var(--terra);font-weight:700;
+  margin-right:11px;display:inline-block;width:14px}
+.faq details[open] summary::before{content:'–'}
+.faq p{margin:12px 0 0;color:var(--cinza);font-size:.95rem}
+
+/* fechamento */
+.final{text-align:center;padding:72px 0}
+.final h2{font-size:clamp(1.8rem,5vw,2.6rem);max-width:720px;margin:0 auto 18px}
+.final .lead{margin:0 auto 34px}
+
+footer{background:#262422;color:#9A918A;font-size:.82rem;
+  padding:30px 0;text-align:center;line-height:1.7}
+footer a{color:#C9BFB4}
+
+/* barra fixa mobile */
+.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--terra);
+  padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  display:none;z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,.18)}
+.sticky a{display:block;text-align:center;color:var(--creme);
+  text-decoration:none;font-weight:700;font-size:1.02rem}
+@media(max-width:760px){
+  .sticky{display:block}
+  body{padding-bottom:78px}
+  .hero{padding:40px 0 36px}
+  section{padding:44px 0}
+  .cta{display:block;width:100%}
+  .cta-row{flex-direction:column;align-items:stretch}
+}
+
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --creme:#1E1C1A;--areia:#272421;--branco:#262422;
+    --escuro:#EDE6DA;--cinza:#A89F95;--terra:#C97A56;--terra-d:#B05C3C;
+  }
+  :root:not([data-theme="light"]) .dark{background:#141311}
+  :root:not([data-theme="light"]) .capa{border-color:#3A352F}
+}
+:root[data-theme="dark"]{
+  --creme:#1E1C1A;--areia:#272421;--branco:#262422;
+  --escuro:#EDE6DA;--cinza:#A89F95;--terra:#C97A56;--terra-d:#B05C3C;
+}
+</style>
+</head>
+<body>
+
+<!--
+  Links dos botões (destinos configurados no /_redirects):
+    /oquecomprar/comprar  -> checkout Kiwify do produto pago
+    /oquecomprar/amostra  -> PDF da amostra grátis
+-->
+
+<div class="topbar">GUIA DA PRIMEIRA CASA</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap grid">
+    <div class="txt">
+      <div class="kicker">E-book · Leitura de uma tarde</div>
+      <h1>O que comprar<span class="hl">primeiro</span></h1>
+      <p class="sub">O que comprar agora, o que pode esperar e os erros que custam caro. Um sistema de decisão para montar a primeira casa sem gastar tudo de uma vez.</p>
+      <div class="cta-row">
+        <a class="cta" href="/oquecomprar/comprar">Quero o guia completo</a>
+        <a class="cta ghost" href="/oquecomprar/amostra">Baixar amostra grátis</a>
+      </div>
+      <p class="micro">Download imediato · 12 capítulos · 5 fichas para levar na loja</p>
+    </div>
+    <div class="art">
+      <!-- Imagem 02_capa_produto.png salva como /oquecomprar/capa.png -->
+      <img class="capa" src="/oquecomprar/capa.png" alt="Capa do e-book O Que Comprar Primeiro"
+           onerror="this.outerHTML='&lt;div class=&quot;capa-ph&quot;&gt;Capa do e-book&lt;br&gt;(02_capa_produto.png)&lt;/div&gt;'">
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOR ============ -->
+<section class="alt">
+  <div class="wrap">
+    <h2>Você pegou a chave. E agora?</h2>
+    <p class="lead">Você digitou "o que comprar para casa nova" e o Google devolveu uma lista com cento e vinte itens. Todos pareciam necessários. Nenhum vinha com ordem.</p>
+    <ul class="pains">
+      <li>Tudo parece urgente ao mesmo tempo e o dinheiro é finito.</li>
+      <li>Você compra o jogo de 12 panelas e descobre que usa quatro.</li>
+      <li>A air fryer chegou antes do escorredor de louça.</li>
+      <li>O eletrodoméstico não cabe no espaço que você tinha planejado.</li>
+      <li>A gaveta de utensílios não fecha e nada está à mão.</li>
+      <li>A fatura do primeiro mês tem 23 linhas e nenhuma parecia grande.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ MÉTODO ============ -->
+<section class="dark">
+  <div class="wrap">
+    <h2>O Método CASA</h2>
+    <p class="lead">Quatro perguntas, quinze segundos. Funcionam no corredor da loja e na tela do celular às onze da noite.</p>
+    <div class="metodo">
+      <div class="q"><div class="letra">C</div><h3>Cabe?</h3><p>Espaço, porta, tomada, voltagem e orçamento do mês. É a primeira porque é a única cujo erro não tem conserto.</p></div>
+      <div class="q"><div class="letra">A</div><h3>Agora?</h3><p>Isso trava minha rotina hoje ou só melhora ela? Se melhora, vai para a lista com data e gatilho.</p></div>
+      <div class="q"><div class="letra">S</div><h3>Serve pra quantas coisas?</h3><p>Item que resolve três situações vence item que resolve uma. Especialmente quando o espaço é curto.</p></div>
+      <div class="q"><div class="letra">A</div><h3>Aguenta o uso?</h3><p>Investimento acompanha frequência. O que você usa todo dia merece o dinheiro. O que usa uma vez por mês, não.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIFERENCIAL ============ -->
+<section>
+  <div class="wrap">
+    <h2>Não é mais uma lista de compras</h2>
+    <p class="lead">Lista é inventário, e inventário não decide nada. Este guia faz o contrário.</p>
+    <div class="cols">
+      <div class="card"><h3>Diz o que NÃO comprar</h3><p>Tem um capítulo inteiro sobre produtos que todo mundo jura serem indispensáveis — e para quem eles realmente são.</p></div>
+      <div class="card"><h3>Classifica tudo</h3><p>Essencial, conforto, upgrade ou depende. E quando é "depende", o texto te dá o critério e devolve a decisão.</p></div>
+      <div class="card"><h3>Segue a sua fase</h3><p>Antes da mudança, primeiros 3 dias, primeiras 2 semanas, primeiro mês. Você abre no capítulo onde você está.</p></div>
+      <div class="card"><h3>Fichas para a loja</h3><p>Cinco listas fechadas por ambiente, feitas para imprimir ou abrir no celular com o carrinho na mão.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIORIDADES ============ -->
+<section class="alt">
+  <div class="wrap">
+    <h2>O sistema de prioridade</h2>
+    <p class="lead">Nada aqui é indispensável "porque sim". Se o livro diz que algo é essencial, ele diz por quê.</p>
+    <div class="prio">
+      <div><span class="dot" style="background:var(--vermelho)"></span><span><b>Essencial</b> — sem isso a rotina trava. Não é opinião: é impossibilidade prática.</span></div>
+      <div><span class="dot" style="background:var(--amarelo)"></span><span><b>Conforto</b> — não trava nada, mas melhora bastante o dia. Entra na segunda onda.</span></div>
+      <div><span class="dot" style="background:var(--verde)"></span><span><b>Upgrade</b> — legítimo e desejável. Pode esperar tranquilamente.</span></div>
+      <div><span class="dot" style="background:var(--cinza)"></span><span><b>Depende</b> — varia com rotina, espaço e orçamento. Aqui quem decide é você.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUMÁRIO ============ -->
+<section>
+  <div class="wrap">
+    <h2>O que tem dentro</h2>
+    <p class="lead">12 capítulos, mais de 110 páginas e 5 fichas de consulta.</p>
+    <ul class="toc">
+      <li><b>1.</b> O erro que acontece antes da primeira compra</li>
+      <li><b>2.</b> Quanto isso vai custar (e como não gastar tudo de uma vez)</li>
+      <li><b>3.</b> A primeira noite: o mínimo para dormir, comer e tomar banho</li>
+      <li><b>4.</b> Panelas: por que três resolvem quase tudo</li>
+      <li><b>5.</b> A cozinha que funciona: utensílios que você usa de verdade</li>
+      <li><b>6.</b> Limpeza: a casa que se mantém quase sozinha</li>
+      <li><b>7.</b> Organização: o que fazer antes de comprar organizador</li>
+      <li><b>8.</b> Eletrodomésticos: a ordem que quase ninguém segue</li>
+      <li><b>9.</b> Air fryer, liquidificador e cafeteira: o capítulo honesto</li>
+      <li><b>10.</b> Quarto, banheiro e sala: o conforto que muda o dia</li>
+      <li><b>11.</b> Upgrades: o que comprar quando a casa já anda sozinha</li>
+      <li><b>12.</b> Já comprei errado. E agora?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ AMOSTRA ============ -->
+<section class="alt" id="amostra">
+  <div class="wrap">
+    <div class="amostra">
+      <h2>Comece de graça</h2>
+      <p class="lead" style="margin:14px auto 26px">A amostra traz a abertura, o Método CASA completo e os quatro primeiros capítulos — tudo o que você precisa para atravessar a primeira semana sem errar as compras caras.</p>
+      <a class="cta ghost" href="/oquecomprar/amostra">Baixar a amostra gratuita</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section>
+  <div class="wrap">
+    <h2>Perguntas rápidas</h2>
+    <div class="faq" style="max-width:760px;margin-top:28px">
+      <details open><summary>Já estou morando há um mês. Ainda serve?</summary><p>Serve. O livro segue a jornada da mudança, então você abre direto no capítulo da sua fase. E tem um capítulo inteiro sobre o que fazer quando você já comprou errado — o que vale consertar e o que é mais barato conviver.</p></details>
+      <details><summary>É um catálogo de produtos?</summary><p>Não. Existem sugestões de produto, e elas são links de afiliado — você não paga nada a mais por isso. Mas nenhuma aparece antes de o texto te dar o critério para escolher sozinho. Se você ler tudo e não clicar em nada, o livro funcionou.</p></details>
+      <details><summary>Preciso entender de cozinha ou de decoração?</summary><p>Não. O livro foi escrito para quem nunca comprou uma panela na vida e não sabe o que diferencia uma da outra. Explica sem infantilizar.</p></details>
+      <details><summary>Como recebo?</summary><p>Download imediato após a compra, em PDF. Dá para ler no celular, no computador ou imprimir as fichas.</p></details>
+      <details><summary>Serve para apartamento pequeno?</summary><p>Especialmente. Boa parte do livro trata de espaço curto — medir antes de comprar, o custo da bancada ocupada e por que capacidade grande demais atrapalha mais do que ajuda.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FECHAMENTO ============ -->
+<section class="dark final">
+  <div class="wrap">
+    <h2>Você não precisa comprar tudo para ter uma casa. Precisa saber o que comprar primeiro.</h2>
+    <p class="lead">Mais de 110 páginas, 12 capítulos e as fichas que continuam úteis meses depois da mudança.</p>
+    <a class="cta" href="/oquecomprar/comprar">Quero o guia completo</a>
+    <p class="micro" style="margin-top:18px;color:#9A918A">Pagamento seguro · Download imediato</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>O Que Comprar Primeiro — Guia da Primeira Casa</p>
+    <p>Este material contém links de afiliado. Você não paga nada a mais por isso.</p>
+    <p><a href="mailto:contato@praticahub.com.br">Contato</a> · <a href="/">Pratica Hub</a></p>
+  </div>
+</footer>
+
+<div class="sticky"><a href="/oquecomprar/comprar">Quero o guia completo</a></div>
+
+</body>
+</html>
