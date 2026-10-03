@@ -8,5 +8,8 @@
   },
   "observability": {
     "enabled": true
+  },
+  "secrets": {
+    "required": ["RESEND_API_KEY"]
   }
 }
