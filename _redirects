@@ -22,7 +22,6 @@
 /ebook              /papinhas-faceis.pdf                    302
 
 # ---------- oquecomprar (O Que Comprar Primeiro) ----------
-# TEMPORARIO: /comprar volta para a propria pagina ate chegar a URL do
-# checkout Kiwify (trocar o destino por https://pay.kiwify.com.br/XXXX).
-/oquecomprar/comprar   /oquecomprar/                                    302
+# Checkout Kiwify do produto pago. Se o link mudar, troque so o destino.
+/oquecomprar/comprar   https://pay.kiwify.com.br/NYGieC6                302
 /oquecomprar/amostra   /oquecomprar/amostra-o-que-comprar-primeiro.pdf  302
