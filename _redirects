@@ -1,5 +1,5 @@
 # _redirects — praticahub.com.br
-# v1.1 — 2026-08-31
+# v1.2 — 2026-10-03
 # REGRA: nunca use 301 para links de afiliado. 302 = temporario.
 # Quando um link Shopee expirar, edite so a URL de destino aqui e faca push.
 
@@ -20,3 +20,9 @@
 # ---------- atalhos utilitarios ----------
 /kit-bebe           /kit                                    302
 /ebook              /papinhas-faceis.pdf                    302
+
+# ---------- oquecomprar (O Que Comprar Primeiro) ----------
+# TEMPORARIO: /comprar volta para a propria pagina ate chegar a URL do
+# checkout Kiwify (trocar o destino por https://pay.kiwify.com.br/XXXX).
+/oquecomprar/comprar   /oquecomprar/                                    302
+/oquecomprar/amostra   /oquecomprar/amostra-o-que-comprar-primeiro.pdf  302
